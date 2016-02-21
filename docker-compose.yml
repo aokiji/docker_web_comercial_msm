@@ -15,3 +15,8 @@ servidor_web:
     - "8081:80"
   volumes:
     - ./web_comercial:/var/www/html:Z
+
+minify:
+  build: minify
+  volumes:
+    - "./web_comercial:/usr/src/app/app:Z"
