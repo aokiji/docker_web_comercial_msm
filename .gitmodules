@@ -1,3 +1,3 @@
 [submodule "web_comercial"]
 	path = web_comercial
-	url = gitolite@git.multiservicioselmorche.es:web_comercial.git
+	url = https://github.com/aokiji/web_comercial_msm
