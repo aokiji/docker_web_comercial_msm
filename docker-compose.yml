@@ -18,5 +18,7 @@ servidor_web:
 
 minify:
   build: minify
+  links:
+    - servidor_web
   volumes:
     - "./web_comercial:/usr/src/app/app:Z"
