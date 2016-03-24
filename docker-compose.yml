@@ -14,11 +14,9 @@ servidor_web:
   ports:
     - "8081:80"
   volumes:
-    - ./web_comercial:/var/www/html:Z
+    - ./web_comercial/public_html:/var/www/html:z
 
-minify:
+app_compiler:
   build: minify
-  links:
-    - servidor_web
   volumes:
-    - "./web_comercial:/usr/src/app/app:Z"
+    - "./web_comercial:/usr/src/app/app:z"

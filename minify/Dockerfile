@@ -5,8 +5,8 @@ USER node
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
-COPY gulpfile.js /usr/src/app/
 RUN npm install
 
+COPY gulpfile.js /usr/src/app/
 
 CMD [ "npm", "start" ]
