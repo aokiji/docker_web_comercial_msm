@@ -22,7 +22,7 @@
         html: '*.html',
         images: ['imagenes/**', 'iconos/**'],
         css: 'estilos/**/*.css',
-        static_assets: '.htaccess'
+        static_assets: ['**/.htaccess', '**/*.php']
     };
 
     /**
@@ -95,7 +95,9 @@
                 .pipe(buildCSS())
         });
         watch(bases.app + src.html).pipe(buildHTML());
-        watch(src.static_assets, {cwd: bases.app}).pipe(copyStaticAssets());
+        src.static_assets.forEach(function (item) {
+            watch(bases.app + item).pipe(copyStaticAssets())
+        });
     });
 
     gulp.task('default', ['build', 'watch']);
