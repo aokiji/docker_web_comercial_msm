@@ -22,6 +22,7 @@
         html: '*.html',
         images: ['imagenes/**', 'iconos/**'],
         css: 'estilos/**/*.css',
+        static_assets: '.htaccess'
     };
 
     /**
@@ -48,6 +49,9 @@
         .pipe(concat, 'app.css')
         .pipe(gulp.dest, bases.dist + 'estilos/');
           
+    var copyStaticAssets = lazypipe()
+        .pipe(debug, {title: 'static asset: '})
+        .pipe(gulp.dest, bases.dist);
 
     /**
      * Build tasks per source type
@@ -68,13 +72,17 @@
         gulp.src(src.images, {cwd: bases.app + '**'} ).pipe(buildIMG());
     });
 
+    gulp.task('copyStaticAssets', function () {
+        gulp.src(src.static_assets, {cwd: bases.app}).pipe(copyStaticAssets());
+    });
+
     // metatask that groups all builds
-    gulp.task('build', ['buildJS', 'buildHTML', 'buildIMG', 'buildCSS'], function() {
+    gulp.task('build', ['buildJS', 'buildHTML', 'buildIMG', 'buildCSS', 'copyStaticAssets'], function() {
 
     });
 
     /**
-     * Wath tasks
+     * Watch tasks
      */
     gulp.task('watch', function () {
         console.log('Watching for changes on source files');
@@ -82,11 +90,12 @@
             gulp.src(src.scripts, {cwd: bases.app})
                 .pipe(buildJS())
         });
-        watch('estilos/**/*.css', {cwd: bases.app}, function() {
+        watch(src.css, {cwd: bases.app}, function() {
             gulp.src(src.css, {cwd: bases.app})
                 .pipe(buildCSS())
         });
         watch(bases.app + src.html).pipe(buildHTML());
+        watch(src.static_assets, {cwd: bases.app}).pipe(copyStaticAssets());
     });
 
     gulp.task('default', ['build', 'watch']);
