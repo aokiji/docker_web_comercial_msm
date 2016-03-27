@@ -9,11 +9,14 @@
     var debug      = require('gulp-debug');
     var concat     = require('gulp-concat');
     var clean_css  = require('gulp-clean-css');
+    var jsonminify = require('gulp-jsonminify');
+    var jsoneditor = require('gulp-json-editor');
 
     // bases directories
     var bases = {
         app: 'app/app/',
         dist: 'app/public_html/',
+        locale: 'app/locale/',
     };
 
     // src directories
@@ -22,7 +25,8 @@
         html: '*.html',
         images: ['imagenes/**', 'iconos/**'],
         css: 'estilos/**/*.css',
-        static_assets: ['**/.htaccess', '**/*.php']
+        static_assets: ['**/.htaccess', '**/*.php'],
+        json: '**/i18n.json',                                          
     };
 
     /**
@@ -36,7 +40,7 @@
 
     var buildHTML = lazypipe()
         .pipe(debug, {title: 'building html: '})
-        .pipe(i18n, {'langDir': 'app/locale', 'createLangDirs': true})
+        .pipe(i18n, {'langDir': bases.locale, 'createLangDirs': true})
         .pipe(gulp.dest, bases.dist);
 
     var buildIMG = lazypipe()
@@ -51,6 +55,14 @@
           
     var copyStaticAssets = lazypipe()
         .pipe(debug, {title: 'static asset: '})
+        .pipe(gulp.dest, bases.dist);
+
+    var buildJSON = lazypipe()
+        .pipe(debug, {title: 'building json: '})
+        .pipe(jsoneditor, function(json) {
+            return json['galeria'];
+        })
+        .pipe(jsonminify)
         .pipe(gulp.dest, bases.dist);
 
     /**
@@ -76,9 +88,18 @@
         gulp.src(src.static_assets, {cwd: bases.app}).pipe(copyStaticAssets());
     });
 
-    // metatask that groups all builds
-    gulp.task('build', ['buildJS', 'buildHTML', 'buildIMG', 'buildCSS', 'copyStaticAssets'], function() {
+    gulp.task('buildJSON', function() {
+        gulp.src(src.json, {cwd: bases.locale} ).pipe(buildJSON());
+    });
 
+    // metatask that groups all builds
+    gulp.task('build', [
+            'buildJS', 
+            'buildHTML', 
+            'buildIMG', 
+            'buildCSS', 
+            'copyStaticAssets', 
+            'buildJSON'], function() {
     });
 
     /**
@@ -98,6 +119,7 @@
         src.static_assets.forEach(function (item) {
             watch(bases.app + item).pipe(copyStaticAssets())
         });
+        watch(bases.locale + src.json).pipe(buildJSON())
     });
 
     gulp.task('default', ['build', 'watch']);
