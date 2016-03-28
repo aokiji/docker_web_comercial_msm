@@ -11,9 +11,9 @@ El servicio de la web se sirve en el puerto 8081. El servicio web de mailhog est
 ## Comenzando
 ```shell
 git clone https://github.com/aokiji/docker_web_comercial_msm
-git submodule init; git submodule update
 cd docker_web_comercial_msm
-docker-compose up
+git submodule init; git submodule update
+docker-compose build && docker-compose run app_compiler /usr/src/app/node_modules/.bin/gulp build && docker-compose up
 ```
 
 Ya solo queda acceder con el navegador a http://localhost:8081
