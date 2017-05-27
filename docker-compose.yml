@@ -1,22 +1,26 @@
-servidor_mail:
-  image: mailhog/mailhog
-  ports:
-    - "8082:8025"
-  environment:
-    - "MH_SMTP_BIND_ADDR=0.0.0.0:25"
-  expose:
-    - "25"
+version: '2.1'
+services:
+  servidor_mail:
+    image: mailhog/mailhog
+    ports:
+      - "8082:8025"
+    environment:
+      - "MH_SMTP_BIND_ADDR=0.0.0.0:25"
+    expose:
+      - "25"
 
-servidor_web:
-  build: servidor_web
-  links:
-    - servidor_mail
-  ports:
-    - "8081:80"
-  volumes:
-    - ./web_comercial/public_html:/var/www/html:z
+  servidor_web:
+    build: servidor_web
+    links:
+      - servidor_mail
+    ports:
+      - "8081:80"
+    volumes:
+      - ./web_comercial/public_html:/var/www/html:z
 
-app_compiler:
-  build: minify
-  volumes:
-    - "./web_comercial:/usr/src/app/app:z"
+  app_compiler:
+    build: minify
+    volumes:
+      - "./web_comercial:/usr/src/app/app:z"
+      - "./minify/gulpfile.js:/usr/src/app/gulpfile.js:Z"
+    user: $UID:1000

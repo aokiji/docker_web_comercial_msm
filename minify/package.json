@@ -14,7 +14,9 @@
     "gulp-concat": "^2.6.0",
     "gulp-clean-css": "^2.0.3",
     "gulp-jsonminify": "^1.0.0",
-    "gulp-json-editor": "^2.2.1"
+    "gulp-json-editor": "^2.2.1",
+    "gulp-nunjucks-render": "^2.2.1",
+    "gulp-debug-streams": "^3.0.0"
   },
   "devDependencies": {},
   "scripts": {
